@@ -24,7 +24,7 @@ Le script est basé, comme tous les scrapers, sur l'architecture d'un site web. 
 
 ## Purpose
 
-The purpose of discours_scraper.py is to gather in the form of a CSV file the recent speeches delivered by the French government (about 50 speeches) from the following link: speech](https://www.vie-publique.fr/discours)
+The purpose of discours_scraper.py is to gather in the form of a CSV file the recent speeches delivered by the French government (about 50 speeches) from the following link: [speech](https://www.vie-publique.fr/discours)
 
 The result is extracted on the basis of the following columns: 
 ```titre,date,date_publication,intervenants,mots_cles,discours```
