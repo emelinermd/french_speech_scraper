@@ -8,13 +8,8 @@ class DiscoursScraper():
   def __init__(self):
     self.driver = webdriver.Chrome(ChromeDriverManager().install())
     self.main_page_url = 'https://www.vie-publique.fr/discours'
-
-  def scrap_pages_urls(self):
-    self.driver.get(self.main_page_url)
-    sleep(5) # wait until all elements have loaded
-    pages_urls = self.driver.find_elements_by_css_selector("li.pager__item > a")
-    pages_urls = [page.get_attribute('href') for page in pages_urls]
-    return pages_urls
+    self.child_page_url = 'https://www.vie-publique.fr/discours?page='
+    self.pages_total = 10;
     
   def scrap_speeches_urls(self, page_url):
     self.driver.get(page_url)
@@ -27,14 +22,16 @@ class DiscoursScraper():
     for speech_url in speeches_urls:
       self.driver.get(speech_url)
       sleep(5) # wait until all elements have loaded
-      discours = self.driver.find_elements_by_css_selector("p")
+      discours = self.driver.find_elements_by_css_selector("div.discour--desc > span > p")
       discoursText = ""
-      for d in discours[4:19] :
+      for d in discours:
         discoursText += self.remove_line_breaks(d)
-        # discours title
+      # discours title  
       title = self.driver.find_element_by_css_selector("h1")
+      # discours date
+      date_discours = self.driver.find_element_by_css_selector("time")
       # append row on csv file
-      writer.writerow({'titre': title.text, 'date': discours[0].text, 'date_publication': discours[1].text, 'intervenants': discours[2].text, 'mots_cles': discours[3].text, 'discours': discoursText})   
+      writer.writerow({'titre': title.text, 'date': date_discours.text, 'discours': discoursText})   
     
   def remove_line_breaks(self, element):
     element = element.text.replace('\n', ' ').replace('\r', '') # remove line breaks in text
@@ -43,16 +40,15 @@ class DiscoursScraper():
   def main(self):
     # create csv
     with open('discours.csv', 'w', encoding='utf-8', newline='') as csvfile:
-      fieldnames = ['titre', 'date', 'date_publication', 'intervenants', 'mots_cles', 'discours']
+      fieldnames = ['titre', 'date', 'discours']
       writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
       writer.writeheader()
       # scrap first page
       speeches_urls_first_page = self.scrap_speeches_urls(self.main_page_url)
       self.record_speeches_of_page(writer, speeches_urls_first_page)      
-      # get speeches urls for each next page
-      pages_urls = self.scrap_pages_urls()
-      for page in pages_urls:
-        speeches_urls = self.scrap_speeches_urls(page)
+      # get speeches urls for each next page until reach pages_total
+      for i in range(1, self.pages_total):
+        speeches_urls = self.scrap_speeches_urls(self.child_page_url+str(i))
         # scrap speech text
         self.record_speeches_of_page(writer, speeches_urls)
 
