@@ -8,7 +8,7 @@ Le but de discours_scraper.py est de rassembler sous la forme d'un fichier CSV l
 Le résultat est extrait sur la base des colonnes suivantes : 
 ```titre,date,discours```
 
-Vous pouvez décider du nombre de pages à scraper en renseignant la variable de classe ```pages_total```.
+Vous pouvez décider du nombre de pages à scraper en renseignant les variables de classe ```pages_begin``` et ```pages_end```.
 
 Ce scraper a été réalisé dans le cadre d'une auto-formation à l'analyse de données textuelles.
 
@@ -31,7 +31,7 @@ The purpose of discours_scraper.py is to gather in the form of a CSV file the re
 The result is extracted on the basis of the following columns: 
 ```titre,date,discours```
 
-You can choose the number of pages to be scraped by filling the class variable ```pages_total```.
+You can choose the number of pages to be scraped by filling the class variables ```pages_begin``` and ```pages_end```.
 
 This scraper was made as part of a self-training in the analysis of textual data.
 
